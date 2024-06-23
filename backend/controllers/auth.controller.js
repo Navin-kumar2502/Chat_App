@@ -11,13 +11,10 @@ export const signup= async (req,res)=>{
         if(user){
             return res.status(400).json({error:"Username already exists"});
         }
-        // Hashing  if pass
         const salt=await bcrypt.genSalt(10);
         const hashedPassword=await bcrypt.hash(password,salt);
-        //we apply arandom profile pic through a api call
-        // https://avatar-placeholder.iran.liara.run/document
-        const boyprofilepic=`https://avatar.iran.liara.run/public/boy?username=Scott`;
-        const girlprofilepic=`https://avatar.iran.liara.run/public/girl?username=Maria`;
+        const boyprofilepic=`https://avatar.iran.liara.run/public/${Math.floor(Math.random()*(50))+1}`;
+        const girlprofilepic=`https://avatar.iran.liara.run/public/${Math.floor(Math.random()*(50))+51}`;
         const newUser=new User({
             fullname,
             username,
@@ -26,7 +23,6 @@ export const signup= async (req,res)=>{
             profilePic:gender==="male"? boyprofilepic:girlprofilepic,
         });
         if(newUser){
-            //generate JWT token
             generateTokenandCookies(newUser._id,res);
             await newUser.save();
             res.status(201).json({
@@ -46,7 +42,6 @@ export const signup= async (req,res)=>{
     }
 };
 export const login= async (req,res)=>{
-    //console.log("login User");
     try{ 
         const {username,password}=req.body;
         const user=await User.findOne({username});
@@ -66,7 +61,6 @@ export const login= async (req,res)=>{
         console.log("error in login controller",error.message);
         res.status(500).json({error:"internal server error"});
     }
-    //res.send("login user");
 };
 export const logout= (req,res)=>{
     try{
@@ -77,6 +71,4 @@ export const logout= (req,res)=>{
         console.log("error in logout controller",error.message);
         res.status(500).json({error:"internal server error"});
     }
-    // console.log("logout User");
-    // res.send("logout user");
 };

@@ -1,5 +1,6 @@
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
+import { getReceiverSocketId, io } from "../socket/socket.js";
 export const sendMessage= async(req,res)=>{
     try{
         const {message}= req.body;
@@ -21,10 +22,11 @@ export const sendMessage= async(req,res)=>{
         if(newMessage){
             conversaton.messages.push(newMessage._id);
         }
-        // await conversaton.save();
-        // await newMessage.save();
-        //optimisation this will run in parallel but in previous it was done one by one so one had to wait
         await Promise.all([conversaton.save(),newMessage.save()]);
+        const receiverSocketId=getReceiverSocketId(receiverId);
+        if(receiverSocketId){
+            io.to(receiverSocketId).emit("newMessage",newMessage);
+        }
         res.status(201).json(newMessage);
     }
     catch(error){

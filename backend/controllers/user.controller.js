@@ -1,11 +1,8 @@
 import User from "../models/usermodel.js";
 export const getUsersForSidebar=async(req,res)=>{
     try{
-        const loggedInUserId=req.user._Id;
-        const allUsersExceptMe=await User.find({_id:{$ne:loggedInUserId}}).select("-password");
-        //this last segmeny in above line added to not show all 
-        //users passwords only their details on sidebar 
-        //or postman
+        const loggedInUserId=req.user._id;
+        const allUsersExceptMe = await User.find({ _id: { $ne : loggedInUserId } }).select("-password");
         res.status(200).json(allUsersExceptMe);
     }
     catch(error){
