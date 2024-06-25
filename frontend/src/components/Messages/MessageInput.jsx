@@ -13,13 +13,13 @@ const MessageInput = () => {
   return (
     <form className='px-4 my-3' onSubmit={handleSubmit}>
         <div className='w-full relative'>
-            <input type='text'className='border text-sm rounded-2xl block w-full p-2.5 border-cyan-600 text-white'
+            <input type='text'className='border text-sm rounded-2xl block w-full p-2.5 border-cyan-600 bg-black text-white'
             placeholder='Send a message' 
             value={message}
             onChange={(e)=>setMessage(e.target.value)}
             />
             <button type='submit' className='absolute inset-y-0 end-0 flex items-center pe-3'>
-                {loading? <div className='loading loading-spinner'></div>:<BsSend/>}
+                {loading? <div className='loading loading-spinner'></div>:<BsSend className='text-white'/>}
             </button>
         </div>
     </form>
